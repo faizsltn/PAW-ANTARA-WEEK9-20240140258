@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Todo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="/">📝 Todo & Category App</a>
+      <div class="d-flex align-items-center gap-3">
+        <span class="text-light small">Halo, <strong><%= user.username %></strong></span>
+        <form action="/logout" method="POST" class="m-0">
+          <button type="submit" class="btn btn-outline-light btn-sm">Logout</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="row g-4">
+      <!-- Kolom Kategori & Form Tambah Todo -->
+      <div class="col-md-4">
+        <!-- Form Tambah Todo -->
+        <div class="card border-0 shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="card-title mb-3">Tambah Todo</h5>
+            <form action="/web/todos" method="POST">
+              <div class="mb-3">
+                <input type="text" name="title" class="form-control" placeholder="Apa yang mau dikerjakan?" required>
+              </div>
+              <div class="mb-3">
+                <select name="category_id" class="form-select">
+                  <option value="">-- Tanpa Kategori --</option>
+                  <% categories.forEach(cat => { %>
+                    <option value="<%= cat.id %>"><%= cat.name %></option>
+                  <% }) %>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">+ Tambah Todo</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Kelola Kategori -->
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title mb-3">Kelola Kategori</h5>
+            <form action="/web/categories" method="POST" class="d-flex gap-2 mb-3">
+              <input type="text" name="name" class="form-control form-control-sm" placeholder="Kategori baru..." required>
+              <button type="submit" class="btn btn-sm btn-success">+ Tambah</button>
+            </form>
+            <ul class="list-group list-group-flush">
+              <% categories.forEach(cat => { %>
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <span><%= cat.name %></span>
+                  <form action="/web/categories/<%= cat.id %>/delete" method="POST" class="m-0">
+                    <button type="submit" class="btn btn-link text-danger p-0 border-0 btn-sm">Hapus</button>
+                  </form>
+                </li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Daftar Todo -->
+      <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="card-title mb-0">Daftar Kegiatan</h5>
+              <!-- Filter -->
+              <form method="GET" action="/" class="d-flex align-items-center gap-2">
+                <select name="category_id" class="form-select form-select-sm" onchange="this.form.submit()">
+                  <option value="">Semua Kategori</option>
+                  <% categories.forEach(cat => { %>
+                    <option value="<%= cat.id %>" <%= selectedCategory == cat.id ? 'selected' : '' %>><%= cat.name %></option>
+                  <% }) %>
+                </select>
+              </form>
+            </div>
+
+            <% if (todos.length === 0) { %>
+              <div class="alert alert-info text-center my-4">Belum ada todo. Yuk buat baru!</div>
+            <% } else { %>
+              <div class="list-group list-group-flush">
+                <% todos.forEach(todo => { %>
+                  <div class="list-group-item d-flex justify-content-between align-items-center px-2 py-3">
+                    <div>
+                      <span class="<%= todo.is_completed ? 'text-decoration-line-through text-muted' : 'fw-semibold' %>">
+                        <%= todo.title %>
+                      </span>
+                      <% if (todo.Category) { %>
+                        <span class="badge bg-secondary ms-2"><%= todo.Category.name %></span>
+                      <% } %>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                      <!-- Toggle Checkbox / Status -->
+                      <form action="/web/todos/<%= todo.id %>/toggle" method="POST" class="m-0">
+                        <button type="submit" class="btn btn-sm <%= todo.is_completed ? 'btn-outline-secondary' : 'btn-outline-success' %>">
+                          <%= todo.is_completed ? 'Batal' : 'Selesai' %>
+                        </button>
+                      </form>
+                      <!-- Hapus -->
+                      <form action="/web/todos/<%= todo.id %>/delete" method="POST" class="m-0">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>
+                      </form>
+                    </div>
+                  </div>
+                <% }) %>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
