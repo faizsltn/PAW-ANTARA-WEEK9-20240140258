@@ -105,3 +105,22 @@ Semua response pake format seragam:
 ## Catatan
 - Auth pake `express-session`, session id disimpan di cookie `connect.sid`. Kalo test pake Postman/Insomnia, pastiin cookie di-enable biar session kebawa antar-request.
 - Kalo mau deploy production, ganti session store default (in-memory) ke store yang persist, misal `connect-pg-simple` biar session gak ilang tiap restart server.
+
+Langkah 1: Login
+Method: POST
+URL: http://localhost:3000/api/auth/login
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/e7b223a8-dc69-43dd-b2d0-39d89e8bb35a" />
+
+Langkah 2: Ambil Daftar Kategori
+Method: GET
+URL: http://localhost:3000/api/categories
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/c3922437-481c-4025-86ef-2d148769cd14" />
+
+Langkah 3: Ambil Daftar Todo
+Method: GET
+URL: http://localhost:3000/api/todos
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/015e1713-9302-4966-9b4d-f75d38e291ba" />
+
+SS tampilan
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/08de792f-22b7-46dd-8f11-8d334f05d666" />
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/14244109-78c2-425d-9240-bd5ec85516d0" />
